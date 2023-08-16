@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>タスク管理アプリケーション</title>
+<!--    <link th:href="@{/home.css}" rel="stylesheet">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body>
+<h1>タスク管理アプリケーション</h1>
+<div class="task_form">
+    <h2>タスクの登録</h2>
+    <form action="/add">
+        <label>タスク</label>
+        <input name="task" type="text" />
+        <label>期限</label>
+        <input name="deadline" type="date" />
+        <input type="submit" value="登録" />
+    </form>
+</div>
+<div>
+    <h2>現在のタスク一覧</h2>
+    <table border="1" style="border-collapse:collapse;">
+        <thead>
+        <tr>
+            <th class="hidden">ID</th>
+            <th>タスク</th>
+            <th width="150px">期限</th>
+            <th width="100px">状態</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${taskList}">
+            <td th:text="${task.id}" class="hidden"></td>
+            <td th:text="${task.task}"></td>
+            <td th:text="${task.deadline}"></td>
+            <td th:text="${task.done} ? '完了' : '未完了'"></td>
+            <td width="50px">
+                <button type="submit" id="update_button" onclick="
+                    let row = this.parentElement.parentElement;
+                     getElementById('update_id').value=row.cells[0].firstChild.data;
+                     getElementById('update_task').value=
+                        row.cells[1].firstChild.data;
+                     getElementById('update_deadline').value=row.cells[2].firstChild.data;
+                     getElementById('update_status').selectedIndex=(row.cells[3].firstChild.data=='完了')?1:0;
+                     var dialog = getElementById('updateDialog');
+                     dialog.style.left = ((window.innerWidth - 500) / 2) + 'px';
+                     dialog.style.display = 'block';
+                     ">更新</button>
+            </td>
+            <td width="50px">
+                <form action="delete">
+                    <button type="submit" id="delete_button">削除</button>
+                    <input type="hidden" name="id" th:value="${task.id}" />
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div id="updateDialog">
+    <div class="task_form">
+        <h2>タスクの更新</h2>
+        <form action="/update">
+            <input id="update_id" name="id" type="hidden"  />
+            <label>タスク</label>
+            <input id="update_task" name="task" type="text" />
+            <label>期限</label>
+            <input id="update_deadline" name="deadline" type="date"  />
+            <label>状態</label>
+            <select id="update_status" name="done">
+                <option value="false">未完了</option>
+                <option value="true">完了</option>
+            </select>
+            <div>
+                <button type="submit">更新</button>
+                <button type="reset"
+                        onclick="getElementById('updateDialog').style.display=
+'none';">
+                キャンセル</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    購入する　$200
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">商品を購入しますか？</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
+                <button type="button" class="btn btn-primary">はい</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+</body>
+</html>
